@@ -105,6 +105,22 @@ class GamePole:
         if not 0 <= i <= self.n - 1 or not 0 <= j <= self.m - 1:
             raise IndexError('некорректные индексы i, j клетки игрового поля')
         self.pole[i][j].is_open = True
+        if self.pole[i][j].number == 0:
+            self.__check_number(i, j)
+
+    def __check_number(self, i, j):
+        """Проверяет число в клетке.
+        Если '0', то открывает все соседние клетки"""
+        for n in range(i - 1, i + 2):
+            for m in range(j - 1, j + 2):
+                if (n != i or m != j) and n >= 0 and m >= 0:
+                    try:
+                        if not self.pole[n][m].is_open:
+                            self.pole[n][m].is_open = True
+                            if self.pole[n][m].number == 0:
+                                self.__check_number(n, m)
+                    except IndexError:
+                        continue
 
     def show_pole(self):
         """Выводит поле в терминал"""
