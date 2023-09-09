@@ -10,6 +10,7 @@ class Cell:
         self.number = 0
         self.is_open = False
         self.flag = False
+        self.counter = 0  # Количество открытых клеток
 
     @classmethod
     def __check_bool(cls, value):
@@ -63,6 +64,14 @@ class GamePole:
     @property
     def pole(self):
         return self.__pole_cells
+
+    def count_open(self):
+        """Считает количество открытых клеток"""
+        count = 0
+        for i in range(self.n):
+            for j in range(self.m):
+                count += self.pole[i][j].is_open
+        return count
 
     def init_pole(self):
         """Создает поле для игры"""
@@ -165,7 +174,6 @@ def enter_coordinates():
 
 def game():
     """Запускает игру"""
-    counter = 0
     while True:
         s.show_pole()
         i, j = enter_coordinates()
@@ -174,15 +182,14 @@ def game():
             continue
         if not cell.is_open and not cell.flag:
             s.open_cell(i - 1, j - 1)
-            counter += 1
         if cell.is_mine and not cell.flag:
             s.show_pole()
             print('Вы проиграли')
             break
-        if counter == 71:
+        if s.count_open() == 71:
             print('Вы победили')
             s.show_pole()
             break
 
 
-game()
+game()  # Запуск игры
